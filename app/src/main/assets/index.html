@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculadora de triángulos</title>
+<style>
+:root{--bg:#eaf0ff;--grid:#cfd9f5;--ink:#14213d;--muted:#566282;--line:#c5d0ee;--card:#ffffff;--accent:#d6285b;--ok:#0b9470;--side:#1a6fe0;--ang:#d4501a;--shadow:#14213d;--hero1:#14213d;--hero2:#4a35b8;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1424;--grid:#1c2644;--ink:#e8edff;--muted:#9aa7cc;--line:#2b3860;--card:#172037;--accent:#ff7a9c;--ok:#5fe0b8;--side:#6aa5ff;--ang:#ff9466;--shadow:#000;--hero1:#1b2a55;--hero2:#5a44d6}}
+:root[data-theme="dark"]{--bg:#0e1424;--grid:#1c2644;--ink:#e8edff;--muted:#9aa7cc;--line:#2b3860;--card:#172037;--accent:#ff7a9c;--ok:#5fe0b8;--side:#6aa5ff;--ang:#ff9466;--shadow:#000;--hero1:#1b2a55;--hero2:#5a44d6}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;line-height:1.5;
+background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;background-attachment:fixed}
+main{max-width:920px;margin:0 auto;padding:22px 16px 44px}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;margin-bottom:22px;border-radius:16px;color:#fff;background:linear-gradient(120deg,var(--hero1),var(--hero2));box-shadow:6px 6px 0 var(--shadow)}
+h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.6rem,5vw,2.4rem);margin:0 0 4px;letter-spacing:-.01em;color:#fff}
+p.sub{margin:0;color:#dde4ff;max-width:56ch}
+.deco{width:112px;flex:none}
+@media (max-width:520px){.deco{display:none}}
+.grid{display:grid;grid-template-columns:1fr 1.2fr;gap:20px;align-items:start}
+@media (max-width:700px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:2px solid var(--ink);border-radius:16px;padding:18px;color:var(--ink);box-shadow:6px 6px 0 var(--shadow)}
+.card+.card{margin-top:20px}
+h2{font-family:Georgia,"Times New Roman",serif;font-size:1.1rem;margin:0 0 12px}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label{display:block;font-size:.85rem;font-weight:700;color:var(--muted)}
+.f label:nth-child(odd){color:var(--side)}
+.f label:nth-child(even){color:var(--ang)}
+input{width:100%;margin-top:3px;padding:10px 12px;font:inherit;font-weight:400;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-left-width:6px;border-radius:10px}
+.f label:nth-child(odd) input{border-left-color:var(--side)}
+.f label:nth-child(even) input{border-left-color:var(--ang)}
+input:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.pair{display:flex;gap:10px}
+.row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+button{font:inherit;font-weight:700;padding:10px 22px;border-radius:10px;border:0;cursor:pointer;color:#fff;background:linear-gradient(120deg,var(--side),#6a4be0);box-shadow:0 3px 0 rgba(0,0,0,.3);transition:transform .12s,box-shadow .12s}
+button:hover{transform:translateY(-1px)}
+button:active{transform:translateY(3px);box-shadow:none}
+button.sec{background:transparent;color:var(--ink);border:2px solid var(--ink);box-shadow:none}
+#msg{margin-top:12px;font-size:.9rem;color:var(--accent);font-weight:700}
+#msg:not(:empty){background:color-mix(in srgb,var(--accent) 12%,transparent);padding:9px 12px;border-radius:10px;border-left:5px solid var(--accent)}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+td{padding:7px 0;border-bottom:1px dashed var(--line)}
+td:first-child{font-weight:700}
+tr:nth-child(-n+3) td:first-child{color:var(--side)}
+tr:nth-child(n+4):nth-child(-n+6) td:first-child{color:var(--ang)}
+td:last-child{text-align:right;font-weight:700;font-size:1.05rem}
+td.given{color:var(--ok)}
+svg{width:100%;height:auto;display:block;margin-top:12px}
+.hint{font-size:.8rem;color:var(--muted);margin-top:10px}
+#out .card{animation:rise .45s cubic-bezier(.2,.8,.2,1) both}
+#out .card:nth-child(2){animation-delay:.12s}
+@keyframes rise{from{opacity:0;transform:translateY(12px) scale(.98)}}
+@media (prefers-reduced-motion:reduce){#out .card{animation:none}button{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<header class="hero">
+<div><h1>Calculadora de triángulos</h1>
+<p class="sub">Sirve para cualquier triángulo. Introduce tres datos (al menos un lado) y calculo lados, ángulos, área y perímetro.</p></div>
+<svg class="deco" viewBox="0 0 120 100" aria-hidden="true" style="margin:0"><polygon points="12,86 108,86 38,14" fill="rgba(255,255,255,.12)"/>
+<line x1="12" y1="86" x2="108" y2="86" stroke="#8fc0ff" stroke-width="6" stroke-linecap="round"/>
+<line x1="108" y1="86" x2="38" y2="14" stroke="#ffa27a" stroke-width="6" stroke-linecap="round"/>
+<line x1="38" y1="14" x2="12" y2="86" stroke="#6fe3bd" stroke-width="6" stroke-linecap="round"/>
+<circle cx="12" cy="86" r="5" fill="#fff"/><circle cx="108" cy="86" r="5" fill="#fff"/><circle cx="38" cy="14" r="5" fill="#fff"/></svg>
+</header>
+<div class="grid">
+<section class="card">
+<h2>Tus datos</h2>
+<div id="guide"></div>
+<div class="f">
+<label>Lado a (mm)<input id="a" inputmode="decimal" autocomplete="off"></label>
+<label>Ángulo A (°)<input id="A" inputmode="decimal" autocomplete="off"></label>
+<label>Lado b (mm)<input id="b" inputmode="decimal" autocomplete="off"></label>
+<label>Ángulo B (°)<input id="B" inputmode="decimal" autocomplete="off"></label>
+<label>Lado c (mm)<input id="c" inputmode="decimal" autocomplete="off"></label>
+<label>Ángulo C (°)<input id="C" inputmode="decimal" autocomplete="off"></label>
+</div>
+<div class="row"><button id="go">Calcular</button><button id="clrres" class="sec">Limpiar</button></div>
+<div id="msg" role="status"></div>
+<p class="hint">El ángulo A está frente al lado a, el B frente al b y el C frente al c. Los lados se miden en milímetros (mm). Combinaciones válidas: 3 lados, 2 lados y 1 ángulo, o 1 lado y 2 ángulos. Para un triángulo rectángulo, pon un ángulo de 90°.</p>
+</section>
+<div id="out"><section class="card"><h2>Resultado</h2><p class="hint" style="margin:0">Introduce datos y pulsa Calcular.</p></section></div>
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const K=['a','b','c','A','B','C'];
+const rad=d=>d*Math.PI/180,deg=r=>r*180/Math.PI,EPS=1e-9;
+const num=s=>{s=s.trim().replace(',','.');return s===''?null:Number(s)};
+const fmt=x=>String(Math.round(x*100)/100).replace('.',',');
+const clamp=x=>Math.max(-1,Math.min(1,x));
+
+function fromSides(S){
+  const [a,b,c]=S;
+  if(a+b<=c+EPS||a+c<=b+EPS||b+c<=a+EPS) throw new Error('Esos lados no forman un triángulo: cada lado debe ser menor que la suma de los otros dos.');
+  const ang=(x,y,z)=>deg(Math.acos(clamp((y*y+z*z-x*x)/(2*y*z))));
+  return {S,T:[ang(a,b,c),ang(b,a,c),ang(c,a,b)]};
+}
+
+function solve(v){
+  const S=[v.a,v.b,v.c],T=[v.A,v.B,v.C];
+  const gs=[0,1,2].filter(i=>S[i]!==null),ga=[0,1,2].filter(i=>T[i]!==null);
+  if(gs.length+ga.length!==3) throw new Error('Introduce exactamente tres datos (ahora hay '+(gs.length+ga.length)+').');
+  if([...S,...T].some(x=>x!==null&&(!isFinite(x)||x<=0))) throw new Error('Todos los datos deben ser números mayores que 0.');
+  if(ga.some(i=>T[i]>=180)) throw new Error('Los ángulos de un triángulo deben ser menores de 180°.');
+  if(gs.length===0) throw new Error('Necesito al menos un lado: con solo ángulos hay infinitos triángulos semejantes.');
+  if(gs.length===3) return [fromSides(S)];
+  if(ga.length===2){
+    const m=[0,1,2].find(i=>T[i]===null),sum=T[ga[0]]+T[ga[1]];
+    if(sum>=180-EPS) throw new Error('Los dos ángulos deben sumar menos de 180°.');
+    const Tn=[...T];Tn[m]=180-sum;
+    const j=gs[0],k=S[j]/Math.sin(rad(Tn[j]));
+    return [{S:Tn.map(t=>k*Math.sin(rad(t))),T:Tn}];
+  }
+  const i=ga[0],[o1,o2]=[0,1,2].filter(x=>x!==i);
+  if(S[o1]!==null&&S[o2]!==null){
+    const Sn=[...S];
+    Sn[i]=Math.sqrt(S[o1]**2+S[o2]**2-2*S[o1]*S[o2]*Math.cos(rad(T[i])));
+    return [fromSides(Sn)];
+  }
+  const q=gs.find(x=>x!==i),r=[0,1,2].find(x=>x!==i&&x!==q);
+  const sq=S[q]*Math.sin(rad(T[i]))/S[i];
+  if(sq>1+EPS) throw new Error('No existe ningún triángulo con esos datos: el lado opuesto al ángulo es demasiado corto.');
+  const Q1=deg(Math.asin(clamp(sq))),cands=Math.abs(sq-1)<EPS?[Q1]:[Q1,180-Q1],sols=[];
+  for(const Q of cands){
+    if(Q+T[i]>=180-EPS) continue;
+    const Tn=[0,0,0],Sn=[0,0,0];
+    Tn[i]=T[i];Tn[q]=Q;Tn[r]=180-T[i]-Q;
+    Sn[i]=S[i];Sn[q]=S[q];Sn[r]=S[i]*Math.sin(rad(Tn[r]))/Math.sin(rad(T[i]));
+    sols.push({S:Sn,T:Tn});
+  }
+  if(!sols.length) throw new Error('No existe ningún triángulo con esos datos.');
+  return sols;
+}
+
+function tipo(S,T){
+  const eq=(x,y)=>Math.abs(x-y)<=1e-6*Math.max(x,y);
+  const n=(eq(S[0],S[1])?1:0)+(eq(S[1],S[2])?1:0)+(eq(S[0],S[2])?1:0);
+  const lados=n>=3?'equilátero':n>=1?'isósceles':'escaleno';
+  const M=Math.max(...T);
+  const angs=Math.abs(M-90)<1e-6?'rectángulo':M>90?'obtusángulo':'acutángulo';
+  return lados+', '+angs;
+}
+
+function draw(S,T){
+  const [a,b,c]=S,B=rad(T[1]);
+  const P={B:[0,0],C:[a,0],A:[c*Math.cos(B),c*Math.sin(B)]};
+  const xs=[P.B[0],P.C[0],P.A[0]],ys=[P.B[1],P.C[1],P.A[1]];
+  const x0=Math.min(...xs),x1=Math.max(...xs),y1=Math.max(...ys);
+  const W=300,H=200,p=34,k=Math.min((W-2*p)/(x1-x0||1),(H-2*p)/(y1||1));
+  const ox=(W-(x1-x0)*k)/2,oy=(H+y1*k)/2;
+  const T2=q=>[ox+(q[0]-x0)*k,oy-q[1]*k];
+  const [pa,pb,pc]=[T2(P.A),T2(P.B),T2(P.C)];
+  const g=[(pa[0]+pb[0]+pc[0])/3,(pa[1]+pb[1]+pc[1])/3];
+  const away=(q,d)=>{const dx=q[0]-g[0],dy=q[1]-g[1],l=Math.hypot(dx,dy)||1;return [q[0]+dx/l*d,q[1]+dy/l*d+4]};
+  const mid=(u,w)=>[(u[0]+w[0])/2,(u[1]+w[1])/2];
+  const L=(t,q)=>`<text x="${q[0]}" y="${q[1]}">${t}</text>`;
+  return `<svg viewBox="0 0 300 200" role="img" aria-label="Dibujo del triángulo"><polygon points="${pa} ${pb} ${pc}" fill="var(--side)" fill-opacity=".14" stroke="var(--side)" stroke-width="3" stroke-linejoin="round"/>`+
+   `<g font-size="13" fill="currentColor" text-anchor="middle" font-weight="700">${L('A',away(pa,14))}${L('B',away(pb,14))}${L('C',away(pc,14))}</g>`+
+   `<g font-size="12" fill="var(--muted)" text-anchor="middle">${L('a',away(mid(pb,pc),12))}${L('b',away(mid(pa,pc),12))}${L('c',away(mid(pa,pb),12))}</g></svg>`;
+}
+
+function card(sol,v,n,total){
+  const {S,T}=sol,s=(S[0]+S[1]+S[2])/2;
+  const area=Math.sqrt(Math.max(0,s*(s-S[0])*(s-S[1])*(s-S[2])));
+  const rows=[];
+  ['a','b','c'].forEach((l,i)=>rows.push(['Lado '+l,S[i],' mm',v[l]!==null]));
+  ['A','B','C'].forEach((l,i)=>rows.push(['Ángulo '+l,T[i],'°',v[l]!==null]));
+  rows.push(['Perímetro',2*s,' mm',false],['Área',area,' mm²',false]);
+  return `<section class="card"><h2>${total>1?'Solución '+n+' de '+total:'Resultado'}: triángulo ${tipo(S,T)}</h2><table>`+
+   rows.map(r=>`<tr><td>${r[0]}</td><td class="${r[3]?'given':''}">${fmt(r[1])}${r[2]}</td></tr>`).join('')+`</table>${draw(S,T)}`+
+   (total>1?`<p class="hint">Con lado, lado y un ángulo opuesto a uno de ellos pueden existir dos triángulos distintos (caso ambiguo).</p>`:'')+`</section>`;
+}
+
+function run(){
+  const v={};K.forEach(k=>v[k]=num($(k).value));
+  $('msg').textContent='';
+  try{
+    const sols=solve(v);
+    $('out').innerHTML=sols.map((s,i)=>card(s,v,i+1,sols.length)).join('');
+  }catch(e){$('msg').textContent=e.message}
+}
+const V={A:[115,40],B:[45,165],C:[255,165]};
+const SD={a:['B','C'],b:['C','A'],c:['A','B']};
+const LP={A:[115,22,'middle'],B:[45,190,'middle'],C:[255,190,'middle'],a:[150,190,'middle'],b:[207,98,'start'],c:[56,98,'end']};
+function wedge(k){
+  const v=V[k],o=Object.keys(V).filter(x=>x!==k),r=26;
+  const a1=Math.atan2(V[o[0]][1]-v[1],V[o[0]][0]-v[0]),a2=Math.atan2(V[o[1]][1]-v[1],V[o[1]][0]-v[0]);
+  let d=a2-a1;while(d>Math.PI)d-=2*Math.PI;while(d<-Math.PI)d+=2*Math.PI;
+  const p=a=>[v[0]+r*Math.cos(a),v[1]+r*Math.sin(a)].map(n=>n.toFixed(1));
+  return `M${v} L${p(a1)} A${r} ${r} 0 0 ${d>0?1:0} ${p(a2)}Z`;
+}
+function initGuide(){
+  $('guide').innerHTML=`<svg viewBox="0 0 320 200" role="img" aria-label="Triángulo guía con los datos que has introducido" style="margin:0 0 4px">`+
+   ['A','B','C'].map(k=>`<path id="g-${k}" d="${wedge(k)}"/>`).join('')+
+   Object.keys(SD).map(s=>`<line id="g-${s}" x1="${V[SD[s][0]][0]}" y1="${V[SD[s][0]][1]}" x2="${V[SD[s][1]][0]}" y2="${V[SD[s][1]][1]}" stroke-linecap="round"/>`).join('')+
+   K.map(k=>`<text id="l-${k}" x="${LP[k][0]}" y="${LP[k][1]}" text-anchor="${LP[k][2]}" font-size="14">${k}</text>`).join('')+
+   `</svg><p class="hint" id="count" style="margin:0 0 12px"></p>`;
+}
+function guide(){
+  let n=0;
+  K.forEach(k=>{
+    const t=$(k).value.trim(),on=t!=='',isA=k===k.toUpperCase(),sh=$('g-'+k),lb=$('l-'+k);
+    if(on)n++;
+    if(isA){sh.style.fill=on?'var(--ok)':'var(--line)';sh.style.fillOpacity=on?.45:.5}
+    else{sh.style.stroke=on?'var(--ok)':'var(--muted)';sh.style.strokeWidth=on?5:2.5}
+    lb.textContent=on?`${k} = ${t}${isA?'°':' mm'}`:k;
+    lb.style.fill=on?'var(--ok)':'var(--muted)';lb.style.fontWeight=on?700:400;
+  });
+  $('count').textContent=n>3?`Has puesto ${n} datos: deja solo tres.`:`Datos introducidos: ${n} de 3. En verde, lo que ya has puesto.`;
+}
+initGuide();K.forEach(k=>$(k).addEventListener('input',guide));guide();
+$('go').onclick=run;
+$('clrres').onclick=()=>{K.forEach(k=>$(k).value='');guide();$('msg').textContent='';$('out').innerHTML='<section class="card"><h2>Resultado</h2><p class="hint" style="margin:0">Introduce datos y pulsa Calcular.</p></section>'};
+document.addEventListener('keydown',e=>{if(e.key==='Enter')run()});
+</script>
+</body>
+</html>

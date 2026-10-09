@@ -1,0 +1,20 @@
+CALCULADORA DE TRIÁNGULOS - PROYECTO ANDROID
+=============================================
+
+Para obtener el .apk:
+
+1. Instala Android Studio (gratis): https://developer.android.com/studio
+2. Descomprime esta carpeta y, en Android Studio, elige File > Open y selecciona la carpeta "CalculadoraTriangulos".
+3. Espera a que termine la sincronización de Gradle (la primera vez descarga componentes; hace falta internet).
+   Si propone actualizar Gradle o el plugin de Android, acepta.
+4. Menú Build > Build Bundle(s) / APK(s) > Build APK(s).
+5. Cuando termine, pulsa "locate" en el aviso. El archivo es:
+   app/build/outputs/apk/debug/app-debug.apk
+
+Para instalarlo en el móvil: copia el .apk al teléfono, ábrelo y permite
+"instalar apps de origen desconocido" cuando lo pida.
+
+Para subirlo a Google Play hace falta un paquete firmado (.aab):
+Build > Generate Signed Bundle / APK > Android App Bundle.
+
+Para cambiar la calculadora, edita: app/src/main/assets/index.html
